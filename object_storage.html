@@ -1,0 +1,178 @@
+<h1>Setup IBM Cloud Object Storage to store your Files</h1>
+<h3>by <a href="https://www.linkedin.com/in/malika-goyal-04798622/" > Malika Goyal</a>, <a href="https://www.linkedin.com/in/srishti-srivastava-343095a8"> Srishti Srivastava  </a>     </h3>
+<h4> Note: if the interface for Watson Studio has changed, please post a question in the form, we are working on updating this document.  </h4>
+<p>This section will teach you how to setup IBM Object Storage and store your dashboard files hosted on the Cloud in
+    Python. You use IBM Cloud Object Storage, an affordable, reliable, and secure Cloud storage solution.This article
+    will help you get started with IBM Cloud Object Storage.</p>
+<h2>What is Object Storage and why should you use it?</h2>
+<p>The &ldquo;Storage&rdquo; part of object storage is pretty straightforward, but what exactly is an object and why
+    would you want to store one? An object is basically any conceivable data. It could be a text file, a song, or a
+    picture. For the purposes of this tutorial, our objects will all be HTML files.</p>
+<p>Unlike a typical filesystem (like the one used by the device you&rsquo;re reading this article on) where files are
+    grouped in hierarchies of directories/folders, object storage has a flat structure. All objects are stored in
+    groups called buckets. This structure allows for better performance, massive scalability, and cost-effectiveness.</p>
+<p></p>
+<p>By the end of this article, you will know how to store your files on IBM Cloud Object Storage and easily access them
+    using Python.</p>
+
+<h2>Provisioning an Object Storage Instance on IBM Cloud</h2>
+<p><a href="https://cocl.us/corsera_project">Sign up or log in with your IBM Cloud account here</a> (it&rsquo;s free)
+    to begin provisioning your Object Storage instance. Feel free to use the Lite plan, which is free and allows you to
+    store up to 25 GB per month. You can customize the Service Name if you wish, or just leave it as the default. You
+    can also leave the resource group to the default. Resource groups are useful to organize your resources on IBM
+    Cloud, particularly when you have many of them running. When you&rsquo;re ready, click the <b>Create</b> button to
+    finish provisioning your Object Storage instance.</p>
+<p></p>
+<p><img class="aligncenter size-large wp-image-6584" src="/wp-content/uploads/2018/06/creating-object-storage-instance-1024x551.png"
+        alt="Creating an Object Storage instance" width="1024" srcset="https://cognitiveclass.ai/wp-content/uploads/2018/06/creating-object-storage-instance-1024x551.png 1024w, https://cognitiveclass.ai/wp-content/uploads/2018/06/creating-object-storage-instance-300x161.png 300w, https://cognitiveclass.ai/wp-content/uploads/2018/06/creating-object-storage-instance-768x413.png 768w, https://cognitiveclass.ai/wp-content/uploads/2018/06/creating-object-storage-instance.png 1600w"
+        sizes="(max-width: 1024px) 100vw, 1024px" /></p>
+
+<h2>Working with Buckets</h2>
+Since you just created the instance, you&rsquo;ll now be presented with options to create a bucket. You can always
+find
+your Object Storage instance by selecting it from your IBM Cloud Dashboard.
+
+There&rsquo;s a limit of 100 buckets per Object Storage instance, but each bucket can hold billions of objects. In
+practice,
+how many buckets you need will be dictated by your availability and resilience needs.
+
+For the purposes of this tutorial, a single bucket will do just fine.
+
+
+<h2>Creating your First Bucket</h2>
+
+<p>Click the <b>Create Bucket</b> button and you&rsquo;ll be shown a window like the one below, where you can customize
+    some details of your Bucket. All these options may seem overwhelming at the moment, but don&rsquo;t worry,
+    we&rsquo;ll explain them in a moment. They are part of what makes this service so customizable, should you have the
+    need later on. There are several naming conventions including Must start and end in alphanumeric characters (from 3
+    to 255 ) limited <g class="gr_ gr_12 gr-alert gr_gramm gr_inline_cards gr_run_anim Punctuation only-del replaceWithoutSep"
+        id="12" data-gr-id="12">to:</g> lowercase, numbers and non-consecutive dots, and hyphens. For now  all you have to do is make sure that 
+        <b> Resiliency </b> is set to <b>Cross Region</b> and the <b>location</b> is set to <b>us-geo </b>.</p>
+
+<p><a href="https://ibm.box.com/shared/static/b5z2fes4pgt9gv7qmbgmujf5b0dyjywd.png"><img class="aligncenter" style="max-width: 100%;"
+            title="Creating an Object Storage bucket" src="https://ibm.box.com/shared/static/b5z2fes4pgt9gv7qmbgmujf5b0dyjywd.png"
+            alt="Creating an Object Storage bucket" width="682" /></a></p>
+
+<p></p>
+
+<p>If you don&rsquo;t care about the nuances of bucket configuration, you can type in any unique name you like and
+    press the Create button, leaving all other options to their defaults. You can then skip to the<a href="#putting-objects-in-buckets">
+        <strong>Putting Objects in Buckets</strong></a> section below. If you would like to learn about what these
+    options mean, read on.</p>
+
+<h2>Configuring your bucket</h2>
+<h4 style="text-align: center;">Resiliency Options</h4>
+<table id="tablepress-1" class="tablepress tablepress-id-1">
+    <thead>
+        <tr>
+            <th>Resiliency Option</th>
+            <th>Description</th>
+            <th>Characteristics</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Cross Region</strong></td>
+            <td>Your data is stored across three geographic regions within your selected location</td>
+            <td>High availability and <em>very</em> high durability</td>
+        </tr>
+        <tr>
+            <td><strong>Regional</strong></td>
+            <td>Your data is stored across three different data centers within a single geographic region</td>
+            <td>High availability and durability, very low latency for regional users</td>
+        </tr>
+        <tr>
+            <td><strong>Single Data Center</strong></td>
+            <td>Your data is stored across multiple devices within a single data center</td>
+            <td>Data locality</td>
+        </tr>
+    </tbody>
+</table>
+<h4 style="text-align: center;">Storage Class Options</h4>
+<table id="tablepress-2" class="tablepress tablepress-id-2">
+    <thead>
+        <tr>
+            <th>Frequency of Data Access</th>
+            <th>IBM Cloud Object Storage Class</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Continual</td>
+            <td><strong>Standard</strong></td>
+        </tr>
+        <tr>
+            <td>Weekly or monthly</td>
+            <td><strong>Vault</strong></td>
+        </tr>
+        <tr>
+            <td>Less than once a month</td>
+            <td><strong>Cold Vault</strong></td>
+        </tr>
+        <tr>
+            <td>Unpredictable</td>
+            <td><strong>Flex</strong></td>
+        </tr>
+    </tbody>
+</table>
+<p>Feel free to experiment with different configurations, but I recommend choosing &ldquo;Standard&rdquo; for your
+    storage class for this tutorial&rsquo;s purposes. Any resilience option will do.</p>
+<p>After you&rsquo;ve created your bucket,later you will have to store the name of the bucket into the Python variable
+    <code>bucket_name </code>(<g class="gr_ gr_29 gr-alert gr_gramm gr_inline_cards gr_run_anim Style multiReplace" id="29"
+        data-gr-id="29">replace </g><code>cc-tutorial</code>
+    <g class="gr_ gr_29 gr-alert gr_gramm gr_inline_cards gr_disable_anim_appear Style multiReplace" id="29" data-gr-id="29">
+        with</g> the name of your bucket) in your Jupyter notebook.
+</p>
+<p></p>
+
+<h2 id="creating-service-credentials">Creating Service Credentials</h2>
+<p>To access your IBM Cloud Object Storage instance from anywhere other than the web interface, you will need to create
+    credentials. Click the <strong>New credential</strong> button under the <strong>Service credentials</strong>
+    section to get started.</p>
+<p><a href="https://ibm.box.com/shared/static/yp1c9sdn9zzc6nxlmcoho9x0g32g6w51.png"> <img class="size-medium aligncenter"
+            style="max-width: 100%;" src="https://ibm.box.com/shared/static/yp1c9sdn9zzc6nxlmcoho9x0g32g6w51.png" />
+    </a></p>
+<p>In the next window, <g class="gr_ gr_15 gr-alert gr_gramm gr_inline_cards gr_run_anim Style multiReplace" id="15"
+        data-gr-id="15">select </g><code>Manager</code>
+    <g class="gr_ gr_15 gr-alert gr_gramm gr_inline_cards gr_disable_anim_appear Style multiReplace" id="15" data-gr-id="15">
+        as</g> your role, and <g class="gr_ gr_16 gr-alert gr_gramm gr_inline_cards gr_run_anim Style multiReplace" id="16"
+        data-gr-id="16">add </g><code>{"HMAC":true}</code>
+    <g class="gr_ gr_16 gr-alert gr_gramm gr_inline_cards gr_disable_anim_appear Style multiReplace" id="16" data-gr-id="16">
+        to</g>
+    <g class="gr_ gr_17 gr-alert gr_gramm gr_inline_cards gr_run_anim Style multiReplace" id="17" data-gr-id="17">the
+    </g><code>Add Inline Configuration Parameters (Optional)</code>
+    <g class="gr_ gr_17 gr-alert gr_gramm gr_inline_cards gr_disable_anim_appear Style multiReplace" id="17" data-gr-id="17">
+        field</g>. You can leave all other fields as their defaults and click the <strong>Add</strong> button to
+    continue.
+</p>
+<p><a href="https://ibm.box.com/shared/static/e6sorcitftio6fs3npvrd2kbspet1vhd.png"> <img class="size-medium aligncenter"
+            style="max-width: 100%;" src="https://ibm.box.com/shared/static/e6sorcitftio6fs3npvrd2kbspet1vhd.png" />
+    </a></p>
+<p>You&rsquo;ll now be able to click on <strong>View credentials</strong> to obtain the JSON object containing the
+    credentials you just created. You&rsquo;ll want to store everything you see in a <code>credentials</code> variable
+    like the one below (obviously, replace the placeholder values with your own). Take special note of your <code>access_key_id</code>
+    and <code>secret_access_key</code> which you will need for the <strong>Python </strong>section below</p>
+<p></p>
+<p><strong><span style="color: #ff0000;">Note:</span> If you&rsquo;re following along within a notebook be careful not
+        to share this notebook after adding your credentials!</strong></p>
+
+<h2 id="putting-objects-in-buckets">Putting Objects in Buckets</h2>
+<h3>Adding files to IBM Cloud Object Storage with Python</h3>
+<p>In the assignment, much of the code will be provided. When you call the function <cod>make_dashboard</code> the
+        function will create and save a file <code>index.html</code>; This file contains the dashboard, you must place
+        this file in IBM object storage, you can then view the dashboard via a <code>URL</code>. You will need the
+        variable <code>file_name</code>.</p>
+<p>file_name= &quot;index.html&quot;</p>
+
+<p>There is option to view the credentials you have created. Click<b> “View Credentials”</b>, you will get credentials in the format given below. Copy your Credentials and assign them to the variable <code>credentials</code> given in the notebook in <b>Question 5 #Hidden cell</b>. Format for credentials as follow: </p> 
+<p><code> credentials = {<br /> &nbsp; "apikey": "your-api-key",<br /> &nbsp; "cos_hmac_keys": {<br /> &nbsp;
+        "access_key_id": "your-access-key-here", <br /> &nbsp; "secret_access_key": "your-secret-access-key-here"<br />
+        &nbsp; },<br /> </code> <code> &nbsp;"endpoints": "your-endpoints",<br /> &nbsp; "iam_apikey_description":
+        "your-iam_apikey_description",<br /> &nbsp; "iam_apikey_name": "your-iam_apikey_name",<br /> &nbsp;
+        "iam_role_crn": "your-iam_apikey_name",<br /> &nbsp; "iam_serviceid_crn": "your-iam_serviceid_crn",<br />
+        &nbsp;"resource_instance_id": "your-resource_instance_id"<br /> } </code></p>
+<p>There will be several other steps, but don't worry all the instructions will be provided in the lab.</p>
+<p><b>Note:</b> 1) While creating a bucket, make sure <b>Resiliency</b> is set to <b>Cross Region</b> and the <b>location</b> is set to <b>us-geo</b>.</p>
+<p>2) Bucket name should be same as that you have created in the Object Storage.</p>
+<p>3) endpoint url given in the notebook should remain same.
+</p>
