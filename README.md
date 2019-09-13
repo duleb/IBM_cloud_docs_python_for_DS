@@ -9,4 +9,7 @@ https://ibm-skills-network.github.io/IBM_cloud_docs_python_for_DS/IBMSpeechtoTex
 You can host an image by placing it in the file images, then pushing it to the repository. For example, you can obtain the URL for the image test.png as follows 
 
 https://ibm-skills-network.github.io/IBM_cloud_docs_python_for_DS/images/test.png
+
+For an example of adding an image check out:
+https://ibm-skills-network.github.io/IBM_cloud_docs_python_for_DS
  
