@@ -13,3 +13,7 @@ https://ibm-skills-network.github.io/IBM_cloud_docs_python_for_DS/images/test.pn
 For an example of adding an image check out:
 https://ibm-skills-network.github.io/IBM_cloud_docs_python_for_DS
  
+ **Note**
+ For each document, you can change the image links bt make sure all links to IBM cloud products are the same. 
+ For example https://cocl.us/EdX_Python_101_Pandas should not be https://www.ibm.com/ca-en/marketplace/watson-studio
+. 
